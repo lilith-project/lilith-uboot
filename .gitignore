@@ -35,10 +35,13 @@
 # Generated files
 #
 
-*.depend
+*.depend*
 /LOG
 /errlog
 /reloc_off
+/include/generated/
+/tools/mkenvimage
+asm-offsets.s
 
 # stgit generated dirs
 patches-*

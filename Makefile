@@ -1896,6 +1896,11 @@ CPUAT91_config	:	unconfig
 ## ARM926EJ-S Systems
 #########################################################################
 
+lilith_config    :       unconfig
+	@mkdir -p $(obj)include
+	@$(MKCONFIG) -n $@ -a lilith arm arm926ejs lilith lilith at91
+
+
 at91sam9260ek_nandflash_config \
 at91sam9260ek_dataflash_cs0_config \
 at91sam9260ek_dataflash_cs1_config \
