@@ -347,6 +347,11 @@ void start_armboot (void)
 	dataflash_print_info();
 #endif
 
+/*This is temporarly moved before MMC init,
+has MMC is apparently incompatible with SPI dataflash*/
+	/* initialize environment */
+	env_relocate ();
+
 #ifdef CONFIG_GENERIC_MMC
 /*
  * MMC initialization is called before relocating env.
@@ -356,9 +361,6 @@ void start_armboot (void)
 	puts ("MMC:   ");
 	mmc_initialize (gd->bd);
 #endif
-
-	/* initialize environment */
-	env_relocate ();
 
 #ifdef CONFIG_VFD
 	/* must do this after the framebuffer is allocated */

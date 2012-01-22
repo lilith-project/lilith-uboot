@@ -27,6 +27,7 @@
 #ifndef __CONFIG_H
 #define __CONFIG_H
 
+
 #define CONFIG_AT91_LEGACY
 
 /* ARM asynchronous clock */
@@ -97,6 +98,17 @@
 #define PHYS_SDRAM			0x20000000
 #define PHYS_SDRAM_SIZE			0x04000000	/* 64 megs */
 
+/* SD/MMC card */
+#if 1
+#define CONFIG_MMC			1
+#define CONFIG_GENERIC_MMC		1
+//#define CONFIG_ATMEL_MCI		1
+#define CONFIG_GENERIC_ATMEL_MCI	1
+#define CONFIG_ATMEL_MCI_PORTB		1	/* L9260 uses port B */
+#define CONFIG_SYS_MMC_CD_PIN		AT91_PIN_PC8
+#define CONFIG_CMD_MMC			1
+#endif
+
 /* DataFlash */
 #define CONFIG_ATMEL_DATAFLASH_SPI
 #define CONFIG_HAS_DATAFLASH		1
@@ -148,27 +160,12 @@
 #define CONFIG_SYS_USB_OHCI_MAX_ROOT_PORTS	2
 #define CONFIG_USB_STORAGE		1
 #define CONFIG_CMD_FAT			1
+#define CONFIG_CMD_EXT2			1
 
 #define CONFIG_SYS_LOAD_ADDR			0x22000000	/* load address */
 
 #define CONFIG_SYS_MEMTEST_START		PHYS_SDRAM
 #define CONFIG_SYS_MEMTEST_END			0x23e00000
-
-#ifdef CONFIG_SYS_USE_DATAFLASH_CS0
-
-/* bootstrap + u-boot + env + linux in dataflash on CS0 */
-#define CONFIG_ENV_IS_IN_DATAFLASH	1
-#define CONFIG_SYS_MONITOR_BASE	(CONFIG_SYS_DATAFLASH_LOGIC_ADDR_CS0 + 0x8400)
-#define CONFIG_ENV_OFFSET		0x4200
-#define CONFIG_ENV_ADDR		(CONFIG_SYS_DATAFLASH_LOGIC_ADDR_CS0 + CONFIG_ENV_OFFSET)
-#define CONFIG_ENV_SIZE		0x4200
-#define CONFIG_BOOTCOMMAND	"cp.b 0xC0042000 0x22000000 0x210000; bootm"
-#define CONFIG_BOOTARGS		"console=ttyS0,115200 "			\
-				"root=/dev/mtdblock0 "			\
-				"mtdparts=atmel_nand:-(root) "		\
-				"rw rootfstype=jffs2"
-
-#elif CONFIG_SYS_USE_DATAFLASH_CS1
 
 /* bootstrap + u-boot + env + linux in dataflash on CS1 */
 #define CONFIG_ENV_IS_IN_DATAFLASH	1
@@ -181,23 +178,6 @@
 				"root=/dev/mtdblock0 "			\
 				"mtdparts=atmel_nand:-(root) "		\
 				"rw rootfstype=jffs2"
-
-#else /* CONFIG_SYS_USE_NANDFLASH */
-
-/* bootstrap + u-boot + env + linux in nandflash */
-#define CONFIG_ENV_IS_IN_NAND	1
-#define CONFIG_ENV_OFFSET		0x60000
-#define CONFIG_ENV_OFFSET_REDUND	0x80000
-#define CONFIG_ENV_SIZE		0x20000		/* 1 sector = 128 kB */
-#define CONFIG_BOOTCOMMAND	"nand read 0x22000000 0xA0000 0x200000; bootm"
-#define CONFIG_BOOTARGS		"console=ttyS0,115200 "			\
-				"root=/dev/mtdblock5 "			\
-				"mtdparts=atmel_nand:128k(bootstrap)ro,"	\
-				"256k(uboot)ro,128k(env1)ro,"		\
-				"128k(env2)ro,2M(linux),-(root) "	\
-				"rw rootfstype=jffs2"
-
-#endif
 
 #define CONFIG_BAUDRATE		115200
 #define CONFIG_SYS_BAUDRATE_TABLE	{115200 , 19200, 38400, 57600, 9600 }
