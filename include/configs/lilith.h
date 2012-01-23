@@ -67,20 +67,14 @@
 #define	CONFIG_RED_LED		AT91_PIN_PA9	/* this is the power led */
 #define	CONFIG_GREEN_LED	AT91_PIN_PA6	/* this is the user led */
 
-#define CONFIG_BOOTDELAY	3
+#define CONFIG_BOOTDELAY	1
 
-/*
- * BOOTP options
- */
-#define CONFIG_BOOTP_BOOTFILESIZE	1
-#define CONFIG_BOOTP_BOOTPATH		1
-#define CONFIG_BOOTP_GATEWAY		1
-#define CONFIG_BOOTP_HOSTNAME		1
 
 /*
  * Command line configuration.
  */
 #include <config_cmd_default.h>
+
 #undef CONFIG_CMD_BDI
 #undef CONFIG_CMD_FPGA
 #undef CONFIG_CMD_IMI
@@ -88,10 +82,12 @@
 #undef CONFIG_CMD_LOADS
 #undef CONFIG_CMD_SOURCE
 
-#define CONFIG_CMD_PING		1
-#define CONFIG_CMD_DHCP		1
-#define CONFIG_CMD_NAND		1
-#define CONFIG_CMD_USB		1
+#undef CONFIG_CMD_NET
+#undef CONFIG_CMD_NFS
+#undef CONFIG_CMD_PING
+#undef CONFIG_CMD_DHCP
+#undef CONFIG_CMD_NAND
+#undef CONFIG_CMD_USB
 
 /* SDRAM */
 #define CONFIG_NR_DRAM_BANKS		1
@@ -99,15 +95,16 @@
 #define PHYS_SDRAM_SIZE			0x04000000	/* 64 megs */
 
 /* SD/MMC card */
-#if 1
 #define CONFIG_MMC			1
 #define CONFIG_GENERIC_MMC		1
-//#define CONFIG_ATMEL_MCI		1
 #define CONFIG_GENERIC_ATMEL_MCI	1
 #define CONFIG_ATMEL_MCI_PORTB		1	/* L9260 uses port B */
 #define CONFIG_SYS_MMC_CD_PIN		AT91_PIN_PC8
 #define CONFIG_CMD_MMC			1
-#endif
+
+#define CONFIG_CMD_FAT			1
+#define CONFIG_CMD_EXT2			1
+
 
 /* DataFlash */
 #define CONFIG_ATMEL_DATAFLASH_SPI
@@ -137,30 +134,28 @@
 #define CONFIG_SYS_NAND_MASK_CLE		(1 << 22)
 #define CONFIG_SYS_NAND_ENABLE_PIN		AT91_PIN_PC14
 #define CONFIG_SYS_NAND_READY_PIN		AT91_PIN_PC13
-
 #endif
 
 /* NOR flash - no real flash on this board */
 #define CONFIG_SYS_NO_FLASH			1
 
 /* Ethernet */
-#define CONFIG_MACB			1
-#define CONFIG_RMII			1
-#define CONFIG_NET_MULTI		1
-#define CONFIG_NET_RETRY_COUNT		20
-#define CONFIG_RESET_PHY_R		1
+#undef CONFIG_MACB
+#undef CONFIG_RMII
+#undef CONFIG_NET_MULTI
+#undef CONFIG_NET_RETRY_COUNT
+#undef CONFIG_RESET_PHY_R
 
 /* USB */
-#define CONFIG_USB_ATMEL
-#define CONFIG_USB_OHCI_NEW		1
+#undef CONFIG_USB_ATMEL
+#undef CONFIG_USB_OHCI_NEW
 #define CONFIG_DOS_PARTITION		1
-#define CONFIG_SYS_USB_OHCI_CPU_INIT		1
-#define CONFIG_SYS_USB_OHCI_REGS_BASE		0x00500000	/* AT91SAM9260_UHP_BASE */
-#define CONFIG_SYS_USB_OHCI_SLOT_NAME		"at91sam9260"
-#define CONFIG_SYS_USB_OHCI_MAX_ROOT_PORTS	2
-#define CONFIG_USB_STORAGE		1
-#define CONFIG_CMD_FAT			1
-#define CONFIG_CMD_EXT2			1
+#undef CONFIG_SYS_USB_OHCI_CPU_INIT
+#undef CONFIG_SYS_USB_OHCI_REGS_BASE
+#undef CONFIG_SYS_USB_OHCI_SLOT_NAME
+#undef CONFIG_SYS_USB_OHCI_MAX_ROOT_PORTS
+#undef CONFIG_USB_STORAGE
+
 
 #define CONFIG_SYS_LOAD_ADDR			0x22000000	/* load address */
 
@@ -173,11 +168,10 @@
 #define CONFIG_ENV_OFFSET		0x4200
 #define CONFIG_ENV_ADDR		(CONFIG_SYS_DATAFLASH_LOGIC_ADDR_CS1 + CONFIG_ENV_OFFSET)
 #define CONFIG_ENV_SIZE		0x4200
-#define CONFIG_BOOTCOMMAND	"cp.b 0xD0042000 0x22000000 0x210000; bootm"
+#define CONFIG_BOOTCOMMAND	"mmcinfo; ext2load mmc 0 0x22200000 uImage; bootm 0x22200000"
 #define CONFIG_BOOTARGS		"console=ttyS0,115200 "			\
-				"root=/dev/mtdblock0 "			\
-				"mtdparts=atmel_nand:-(root) "		\
-				"rw rootfstype=jffs2"
+				"root=/dev/mmcblk0p1 rw "		\
+				"rootwait lpj=44748"
 
 #define CONFIG_BAUDRATE		115200
 #define CONFIG_SYS_BAUDRATE_TABLE	{115200 , 19200, 38400, 57600, 9600 }
@@ -186,8 +180,9 @@
 #define CONFIG_SYS_CBSIZE		256
 #define CONFIG_SYS_MAXARGS		16
 #define CONFIG_SYS_PBSIZE		(CONFIG_SYS_CBSIZE + sizeof(CONFIG_SYS_PROMPT) + 16)
-#define CONFIG_SYS_LONGHELP		1
-#define CONFIG_CMDLINE_EDITING	1
+#undef CONFIG_SYS_LONGHELP
+#undef CONFIG_CMDLINE_EDITING
+
 
 /*
  * Size of malloc() pool
@@ -195,7 +190,7 @@
 #define CONFIG_SYS_MALLOC_LEN		ROUND(3 * CONFIG_ENV_SIZE + 128*1024, 0x1000)
 #define CONFIG_SYS_GBL_DATA_SIZE	128	/* 128 bytes for initial data */
 
-#define CONFIG_STACKSIZE	(32*1024)	/* regular stack */
+#define CONFIG_STACKSIZE		(32*1024)	/* regular stack */
 
 #ifdef CONFIG_USE_IRQ
 #error CONFIG_USE_IRQ not supported

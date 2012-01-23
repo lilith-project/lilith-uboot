@@ -184,7 +184,7 @@ int board_init(void)
 	/* arch number of AT91SAM9260EK-Board */
 	gd->bd->bi_arch_number = MACH_TYPE_AT91SAM9260EK;
 #endif
-	/* adress of boot parameters */
+	/* address of boot parameters */
 	gd->bd->bi_boot_params = PHYS_SDRAM + 0x100;
 
 	at91_serial_hw_init();
