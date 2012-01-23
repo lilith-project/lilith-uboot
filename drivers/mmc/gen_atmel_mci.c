@@ -310,7 +310,7 @@ static int mci_init(struct mmc *mmc)
 	writel(MMCI_BIT(MCIEN), &mci->cr);	/* enable mci */
 
 	/* Initial Time-outs */
-	writel(0x5f, &mci->dtor);
+	writel(0x7f, &mci->dtor);
 	/* Disable Interrupts */
 	writel(~0UL, &mci->idr);
 
